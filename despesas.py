@@ -1,9 +1,13 @@
-class Despesas:
-    def __init__(self, nome, categoria, valor) -> None:
-        self.nome = nome
-        self.categoria = categoria
-        self.valor = valor
+from dataclasses import dataclass
+
+@dataclass
+class Despesa:
+    nome:str
+    categoria: str
+    valor: float
+
+def __post_int__(self):
 
 
     def __repr__(self):
-        return f"< Despesas: {self.nome}, {self.categoria}, R${self.valor:.2f} >"
+        return f"<Despesas: {self.nome}, {self.categoria}, R${self.valor:.2f}>"

@@ -1,21 +1,43 @@
-from despesas import Despesas
+from despesas import Despesa
 
 def main():
     print("Rastreador de Despesas ativado!")
 
     despesa_file_path = "despesas.csv"
+
     carteira = 2000
 
-    resumindo_despesas(despesa_file_path, carteira)
+    despesa = obter_despesa
+
+    salvar_despesa(despesa, despesa_file_path)
+
+    mostra_resumo(despesa_file_path, carteira)
 
 
-def despesas_usuario():
-    print("Obtendo despesas...")
+def obter_nome():
+    desp_nome = input("Digite o nome da despesa: ")
+    return desp_nome
 
-    nome_desp = input("Digite o nome da despesa: ")
-    valor_desp = float(input("Digite o valor da despesa: "))
+def obter_valor():
 
-    categoria_desp = [
+    while True:
+        try:
+            desp_valor = float(input("Digite o valor da despesa: "))
+
+            if desp_valor > 0:
+                return desp_valor
+            
+            else:
+                print("O valor deve ser maior que zero!")
+
+        except ValueError:
+            print("Digite apenas números.")
+
+
+    
+
+def obter_categoria():
+    categorias = [
         "🍕 Comida",
         "🏠 Casa",
         "🥳 Lazer",
@@ -23,37 +45,48 @@ def despesas_usuario():
     ]
 
     while True:
-        print("\nSelecione a categoria:")
+            print("\nSelecione a categoria:")
+    
+            for i, categoria_nome in enumerate(categorias):
+                print(f"{i + 1}. {categoria_nome}")
+    
+            value_range = f"[1 - {len(categorias)}]"
+    
+            try:
+                select_index = int(
+                    input(f"Digite o número da categoria {value_range}: ")
+                ) - 1
+    
+                if select_index in range(len(categorias)):
+                    categoria_selecionada = categorias[select_index]
+                    return categoria_selecionada
+    
+    
+                else:
+                    print("Categoria não encontrada. Tente novamente.")
+    
+            except ValueError:
+                print("Digite apenas números.")
 
-        for i, categoria_nome in enumerate(categoria_desp):
-            print(f"{i + 1}. {categoria_nome}")
+               
 
-        value_range = f"[1 - {len(categoria_desp)}]"
+def obter_despesa():
+    nome = obter_nome()
+    valor = obter_valor()
+    categoria = obter_categoria()
 
-        try:
-            select_index = int(
-                input(f"Digite o número da categoria {value_range}: ")
-            ) - 1
+    nova_desp = Despesa(
+        nome=nome,
+        valor=valor,
+        categoria=categoria
+    )
 
-            if select_index in range(len(categoria_desp)):
-                categoria_selecionada = categoria_desp[select_index]
-
-                nova_desp = Despesas(
-                    nome=nome_desp,
-                    categoria=categoria_selecionada,
-                    valor=valor_desp
-                )
-
-                return nova_desp
-
-            else:
-                print("Categoria não encontrada. Tente novamente.")
-
-        except ValueError:
-            print("Digite apenas números.")
+    return nova_desp
+    
 
 
-def salvando_despesas(despesa: Despesas, despesa_file_path):
+
+def salvar_despesa(despesa: Despesa, despesa_file_path):
     print(f"Salvando despesas {despesa} para {despesa_file_path}")
 
     with open(despesa_file_path, "a", encoding="utf-8", newline="") as f:
@@ -62,7 +95,7 @@ def salvando_despesas(despesa: Despesas, despesa_file_path):
 
 
 
-def resumindo_despesas(despesa_file_path, carteira):
+def mostra_resumo(despesa_file_path, carteira):
     print(f"resumindo despesas")
 
     despesas = []
@@ -72,7 +105,7 @@ def resumindo_despesas(despesa_file_path, carteira):
         for line in lines:
             stripped_line = line.strip()
             despesa_nome, despesa_valor, despesa_categoria = stripped_line.split(",")
-            linha_despesa = Despesas(nome=despesa_nome, valor=float(despesa_valor), categoria=despesa_categoria)
+            linha_despesa = Despesa(nome=despesa_nome, valor=float(despesa_valor), categoria=despesa_categoria)
             despesas.append(linha_despesa)
 
 
@@ -88,7 +121,8 @@ def resumindo_despesas(despesa_file_path, carteira):
         print(f" {key}: R${valor:.2f}")
 
 
-    despesas_totais = sum(x.despesas for x in despesas)
+    despesas_totais = sum(x.valor for x in despesas)
+
     print(f"suas despesas foram dê: R${despesas_totais:.2f} nesse mês !!")
 
     saldo_restante = carteira - despesas_totais
