@@ -4,12 +4,9 @@ def main():
     print("Rastreador de Despesas ativado!")
 
     despesa_file_path = "despesas.csv"
+    carteira = 2000
 
-    despesa = despesas_usuario()
-
-    salvando_despesas(despesa, despesa_file_path)
-
-    resumindo_despesas(despesa_file_path)
+    resumindo_despesas(despesa_file_path, carteira)
 
 
 def despesas_usuario():
@@ -65,7 +62,7 @@ def salvando_despesas(despesa: Despesas, despesa_file_path):
 
 
 
-def resumindo_despesas(despesa_file_path):
+def resumindo_despesas(despesa_file_path, carteira):
     print(f"resumindo despesas")
 
     despesas = []
@@ -74,6 +71,31 @@ def resumindo_despesas(despesa_file_path):
         lines = f.readlines()
         for line in lines:
             stripped_line = line.strip()
+            despesa_nome, despesa_valor, despesa_categoria = stripped_line.split(",")
+            linha_despesa = Despesas(nome=despesa_nome, valor=float(despesa_valor), categoria=despesa_categoria)
+            despesas.append(linha_despesa)
+
+
+    valor_por_categoria = {}
+    for despesa in despesas:
+        key = despesa.categoria
+        if key in valor_por_categoria:
+            valor_por_categoria[key] += despesa.valor
+        else:
+            valor_por_categoria[key] = despesa.valor
+
+    for key, valor in valor_por_categoria.items():
+        print(f" {key}: R${valor:.2f}")
+
+
+    despesas_totais = sum(x.despesas for x in despesas)
+    print(f"suas despesas foram dê: R${despesas_totais:.2f} nesse mês !!")
+
+    saldo_restante = carteira - despesas_totais
+    print(f"saldo restante: R${saldo_restante:.2f}")
+
+
+
 
     
 
