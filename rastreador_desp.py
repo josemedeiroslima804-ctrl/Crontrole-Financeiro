@@ -1,17 +1,32 @@
 from despesas import Despesa
+from datetime import date
 
 def main():
     print("Rastreador de Despesas ativado!")
 
     despesa_file_path = "despesas.csv"
 
-    carteira = 2000
+    carteira = obter_renda()
 
-    despesa = obter_despesa
+    despesa = obter_despesa()
 
     salvar_despesa(despesa, despesa_file_path)
 
     mostra_resumo(despesa_file_path, carteira)
+
+def obter_renda():
+       while True:
+        try:
+            renda_mensal = float(input("Digite sua renda mensal: "))
+
+            if renda_mensal > 0:
+                return renda_mensal
+            
+            else:
+                print("O valor deve ser maior que zero!")
+
+        except ValueError:
+            print("Digite apenas números.")
 
 
 def obter_nome():
@@ -90,7 +105,8 @@ def salvar_despesa(despesa: Despesa, despesa_file_path):
     print(f"Salvando despesas {despesa} para {despesa_file_path}")
 
     with open(despesa_file_path, "a", encoding="utf-8", newline="") as f:
-        f.write(f"{despesa.nome},{despesa.valor},{despesa.categoria}\n")
+        f.write(f"{despesa.nome},{despesa.valor},{despesa.categoria}, {despesa.data}\n"
+                )
    
 
 
@@ -100,28 +116,48 @@ def mostra_resumo(despesa_file_path, carteira):
 
     despesas = []
 
-    with open(despesa_file_path, "r") as f:
+    hoje = date.today()
+
+    with open(despesa_file_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
         for line in lines:
             stripped_line = line.strip()
-            despesa_nome, despesa_valor, despesa_categoria = stripped_line.split(",")
-            linha_despesa = Despesa(nome=despesa_nome, valor=float(despesa_valor), categoria=despesa_categoria)
+
+            despesa_nome, despesa_valor, despesa_categoria, despesa_data = [ item.strip() for item in stripped_line.split(",")]
+
+            data_convertida = date.fromisoformat(despesa_data)
+
+            linha_despesa = Despesa(
+                nome=despesa_nome,
+                valor=float(despesa_valor),
+                categoria=despesa_categoria,
+                data=data_convertida
+                )
             despesas.append(linha_despesa)
+
+    despesas_do_mes = []
 
 
     valor_por_categoria = {}
     for despesa in despesas:
-        key = despesa.categoria
-        if key in valor_por_categoria:
-            valor_por_categoria[key] += despesa.valor
-        else:
-            valor_por_categoria[key] = despesa.valor
+
+        if despesa.data.month == hoje.month and despesa.data.year == hoje.year:
+
+            despesas_do_mes.append(despesa)
+
+            key = despesa.categoria
+
+            if key in valor_por_categoria:
+                valor_por_categoria[key] += despesa.valor
+
+            else:
+                valor_por_categoria[key] = despesa.valor
 
     for key, valor in valor_por_categoria.items():
         print(f" {key}: R${valor:.2f}")
 
 
-    despesas_totais = sum(x.valor for x in despesas)
+    despesas_totais = sum(x.valor for x in despesas_do_mes)
 
     print(f"suas despesas foram dê: R${despesas_totais:.2f} nesse mês !!")
 
