@@ -1,0 +1,200 @@
+# 💰 Controle-Financeiro
+
+Sistema simples de controle financeiro desenvolvido em **Python**, com o objetivo de registrar despesas, organizar gastos por categoria e gerar um resumo financeiro mensal.
+
+Este projeto faz parte da minha evolução em desenvolvimento **Back-End com Python**, aplicando conceitos fundamentais da linguagem e boas práticas de programação.
+
+---
+
+## 📌 Sobre o Projeto
+
+O **Rastreador de Despesas** permite que o usuário:
+
+- Informar sua renda mensal;
+- Registrar novas despesas;
+- Classificar despesas por categoria;
+- Armazenar os dados em arquivo `.csv`;
+- Visualizar um resumo dos gastos do mês;
+- Calcular o saldo restante após as despesas.
+
+O projeto foi desenvolvido inicialmente utilizando apenas Python, sem banco de dados ou frameworks, com foco no aprendizado da lógica de programação e organização de código.
+
+---
+
+## 🚀 Funcionalidades
+
+✅ Cadastro de despesas  
+✅ Validação de valores informados  
+✅ Seleção de categorias de gastos  
+✅ Registro automático da data da despesa  
+✅ Persistência dos dados em arquivo CSV  
+✅ Leitura e processamento das despesas cadastradas  
+✅ Resumo financeiro mensal  
+✅ Cálculo de gastos por categoria  
+✅ Cálculo do saldo disponível  
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- Python 3
+- Dataclasses
+- Manipulação de arquivos CSV
+- Tratamento de exceções (`try/except`)
+- Programação Orientada a Objetos
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
+API-Controle-Financeiro
+│
+├── rastreador_desp.py
+│   └── Arquivo principal do sistema
+│
+├── despesas.py
+│   └── Modelo da classe Despesa
+│
+├── despesas.csv
+│   └── Arquivo utilizado para armazenamento dos registros
+│
+└── README.md
+```
+
+---
+
+## 🧠 Conceitos Aplicados
+
+Durante o desenvolvimento foram aplicados conceitos importantes da linguagem Python:
+
+### 📌 Programação Orientada a Objetos
+
+Foi criada a classe `Despesa` utilizando `dataclass`, responsável por representar cada gasto registrado.
+
+Exemplo:
+
+```python
+@dataclass
+class Despesa:
+    nome: str
+    categoria: str
+    valor: float
+    data: date
+```
+
+---
+
+### 📌 Validação de Dados
+
+O sistema impede valores inválidos, como despesas negativas:
+
+```python
+if self.valor < 0:
+    raise ValueError("O valor da despesa não pode ser negativo.")
+```
+
+---
+
+### 📌 Manipulação de Arquivos
+
+As despesas são armazenadas em um arquivo CSV para manter os dados salvos:
+
+```python
+with open("despesas.csv", "a") as f:
+    f.write(...)
+```
+
+---
+
+### 📌 Tratamento de Erros
+
+O sistema possui validações para evitar entradas incorretas:
+
+```python
+try:
+    valor = float(input())
+except ValueError:
+    print("Digite apenas números.")
+```
+
+---
+
+## ▶️ Como Executar o Projeto
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/josemedeiroslima804/API-Controle-Financeiro.git
+```
+
+### 2. Acesse a pasta
+
+```bash
+cd API-Controle-Financeiro
+```
+
+### 3. Execute o programa
+
+```bash
+python rastreador_desp.py
+```
+
+---
+
+## 🖥️ Exemplo de Funcionamento
+
+```
+Rastreador de Despesas ativado!
+
+Digite sua renda mensal:
+3000
+
+Digite o nome da despesa:
+Mercado
+
+Digite o valor da despesa:
+250
+
+Selecione a categoria:
+
+1. 🍕 Comida
+2. 🏠 Casa
+3. 🥳 Lazer
+4. 💼 Trabalho
+
+Digite o número da categoria:
+1
+
+
+Resumo:
+
+🍕 Comida: R$250.00
+
+Suas despesas foram de:
+R$250.00 nesse mês!!
+
+Saldo restante:
+R$2750.00
+```
+
+---
+
+## 🔮 Próximas Melhorias
+
+Algumas melhorias planejadas para versões futuras:
+
+- [ ] Migrar armazenamento CSV para banco de dados PostgreSQL
+- [ ] Criar uma API utilizando FastAPI
+- [ ] Criar autenticação de usuários
+- [ ] Criar endpoints para cadastro e consulta de despesas
+- [ ] Criar dashboard para visualização financeira
+- [ ] Implementar testes automatizados
+
+---
+
+## 👨‍💻 Autor
+
+Criado por: José Augusto Medeiros de Lima
+
+Projeto desenvolvido para prática de programação Python e construção de portfólio Back-End.
